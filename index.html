@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f0">
+<title>Cocina Semanal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<div id="app">
+  <header>
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3M6 12v9M18 3c-1.5 0-3 1.8-3 5s1 4 3 4v9"/></svg></span>
+      <h1>Cocina Semanal</h1>
+    </div>
+    <button class="icon-btn" id="theme" aria-label="Cambiar tema"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
+  </header>
+
+  <main>
+    <!-- SEMANA -->
+    <div class="tab on" id="tab-week">
+      <div class="weekhead"><h2>Tu semana</h2><span class="faint" id="wk-count" style="font-size:12px;font-weight:600"></span></div>
+      <p class="muted" style="font-size:13px;margin:2px 0 0">Elegí los días que cocinás y armá cada momento. Todo intercambiable.</p>
+      <div class="eyebrow" style="margin-top:12px">Días que cocino</div>
+      <div class="day-toggle" id="daytoggle"></div>
+      <div class="wk-summary">
+        <div class="stat"><div class="k">Promedio kcal</div><div class="v tnum" id="avg-kcal">—</div><div class="u">meta 2000</div></div>
+        <div class="stat"><div class="k">Promedio prot.</div><div class="v tnum" id="avg-prot">—</div><div class="u">meta 180 g</div></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn sm" id="autofill">Autocompletar</button>
+        <button class="btn sm ghost" id="clearweek">Vaciar</button>
+      </div>
+      <div id="days"></div>
+    </div>
+
+    <!-- COMPRAS -->
+    <div class="tab" id="tab-shop">
+      <div class="weekhead"><h2>Lista de compras</h2></div>
+      <div class="banner">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span>Todo para <b>esta semana</b>, solo de los días activos. Frescos = comprar al momento; seco = stock. Las cantidades de recetas ya vienen convertidas a lo que <b>comprás</b> (crudo/seco).</span>
+      </div>
+      <div id="shoplist"></div>
+    </div>
+
+    <!-- COMIDAS -->
+    <div class="tab" id="tab-meals">
+      <div class="weekhead"><h2>Comidas</h2></div>
+      <p class="muted section-lead">Elegí una categoría para ver sus comidas y crear las tuyas con tus productos.</p>
+      <div class="seg" id="meals-cat" style="margin-top:12px"></div>
+      <div id="meals-list"></div>
+      <div class="card builder" id="builder"></div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="tab" id="tab-prod">
+      <div class="prodhead"><h2 style="font-size:21px">Productos</h2><button class="btn sm primary" id="addprod">+ Agregar</button></div>
+      <p class="muted section-lead">Cargá los valores del paquete real de lo que comprás, con foto. Se guardan en este navegador.</p>
+
+      <div class="card calc">
+        <h3><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--green)" stroke-width="2" style="vertical-align:-2px"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8M8 14h3"/></svg>Calculadora de porción</h3>
+        <div class="field">
+          <label for="calc-prod">Producto</label>
+          <select id="calc-prod"></select>
+        </div>
+        <div class="seg" id="calc-mode">
+          <button data-m="g2m" class="on">Gramos → macros</button>
+          <button data-m="m2g">Objetivo → gramos</button>
+        </div>
+        <div id="calc-in-g" class="field">
+          <label for="calc-g">Gramos a comer</label>
+          <input id="calc-g" type="number" inputmode="decimal" placeholder="ej. 150" value="150">
+        </div>
+        <div id="calc-in-t" class="hide">
+          <div class="seg" id="calc-target" style="margin-bottom:10px">
+            <button data-t="prot" class="on">Por proteína</button>
+            <button data-t="kcal">Por calorías</button>
+          </div>
+          <div class="field"><label for="calc-t" id="calc-t-lbl">Proteína objetivo (g)</label><input id="calc-t" type="number" inputmode="decimal" placeholder="ej. 40" value="40"></div>
+        </div>
+        <div class="calc-out" id="calc-out"><div class="co"><div class="cok">—</div><div class="cov">—</div></div></div>
+      </div>
+
+      <div id="prodlist"></div>
+    </div>
+
+    <!-- INFO -->
+    <div class="tab info" id="tab-info">
+      <h2>El plan</h2>
+      <p class="muted" style="font-size:13px">Déficit agresivo cuidando el músculo. ~2000 kcal y ~180 g de proteína por día. Todo intercambiable.</p>
+
+      <div class="card">
+        <table class="mini">
+          <tr><td>Desayuno</td><td>~350 kcal · 35 g</td></tr>
+          <tr><td>Almuerzo</td><td>~650 kcal · 55 g</td></tr>
+          <tr><td>Merienda</td><td>~350 kcal · 35 g</td></tr>
+          <tr><td>Cena</td><td>~650 kcal · 55 g</td></tr>
+          <tr><td><b>Total</b></td><td><b>~2000 kcal · 180 g</b></td></tr>
+        </table>
+        <p class="muted" style="font-size:12.5px;margin:8px 0 0">Rango razonable: 1950–2050 kcal · 180–195 g. No hace falta clavar el número exacto.</p>
+      </div>
+
+      <section>
+        <h3>Convención de pesos</h3>
+        <p>Salvo aclaración, los pesos de las recetas del plan son de porción <b>ya cocida y comestible</b>: pollo, carne y pata-muslo sin hueso; arroz, fideos y papa cocidos; verduras crudas.</p>
+        <p>La lista de compras convierte esos pesos a lo que comprás en crudo/seco con estos factores aproximados:</p>
+        <div class="card">
+          <table class="mini">
+            <tr><td>Pollo / bife / picada</td><td>×1,3–1,35</td></tr>
+            <tr><td>Pata-muslo (con hueso)</td><td>×1,7</td></tr>
+            <tr><td>Arroz (cocido→seco)</td><td>×0,33</td></tr>
+            <tr><td>Fideos (cocido→seco)</td><td>×0,45</td></tr>
+            <tr><td>Lentejas (cocido→seco)</td><td>×0,40</td></tr>
+            <tr><td>Papa / verduras</td><td>×1,0</td></tr>
+          </table>
+        </div>
+        <p class="muted" style="font-size:12px;margin-top:8px">Tus comidas propias suman a la lista por producto, con los gramos que cargaste (sin factor).</p>
+      </section>
+
+      <section>
+        <h3>Aceite, café y salsas</h3>
+        <ul>
+          <li><b>5 g de aceite ≈ 45 kcal</b> (una cucharadita). Medilo siempre, nada "a ojo".</li>
+          <li>Si la comida ya trae 5 g, ese es el total (no sumes otros para la ensalada).</li>
+          <li>Café negro con edulcorante no suma. Con leche o azúcar, contá aparte.</li>
+          <li>Cuidá salsas, queso y mayonesa: son calorías difíciles de controlar. Mayonesa light, medida.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Palta y pasta de maní</h3>
+        <p>Saludables pero muy calóricas. Usalas medidas: palta <b>40–50 g</b>, pasta de maní <b>15–20 g</b> por porción.</p>
+        <div class="card">
+          <table class="mini">
+            <tr><td>Palta 40 g / 50 g / 100 g</td><td>~65 / 80 / 160 kcal</td></tr>
+            <tr><td>Pasta de maní 15 g</td><td>~90 kcal</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3>Proteína económica</h3>
+        <p>Priorizá: pollo, huevos, claras, carne picada magra, lentejas, leche y yogur alto en proteína.</p>
+      </section>
+
+      <section>
+        <h3>Nota importante</h3>
+        <p>Los valores son aproximados: cambian según marca, corte, grasa, tipo de queso, tamaño del pan y cocción. Para lo envasado, usá siempre la info del paquete real en la pestaña <b>Productos</b>.</p>
+      </section>
+      <div style="height:8px"></div>
+    </div>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="week" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Semana</button>
+    <button data-tab="shop"><svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Compras</button>
+    <button data-tab="meals"><svg viewBox="0 0 24 24"><path d="M4 3v7a2 2 0 0 0 2 2 2 2 0 0 0 2-2V3M6 12v9M18 3c-1.5 0-3 1.8-3 5s1 4 3 4v9"/></svg>Comidas</button>
+    <button data-tab="prod"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Productos</button>
+    <button data-tab="info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Info</button>
+  </nav>
+</div>
+
+<div id="sheet-root"></div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
